@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Dict, Optional, Sequence
+from typing import Any, Callable, Dict, Optional, Sequence
 
 from flash.core.data.data_module import DataModule
-from flash.core.data.data_source import DefaultDataKeys, PathsDataSource
+from flash.core.data.data_source import DefaultDataKeys, DefaultDataSources, PathsDataSource
 from flash.core.data.process import Preprocess
 from flash.core.utilities.imports import _TORCHVISION_AVAILABLE
 
@@ -40,6 +40,23 @@ class ImageClassificationPreprocess(Preprocess):
     """The ``ImageClassificationPreprocess`` is a :class:`~flash.core.data.process.Preprocess` for loading and
     transforming data for image classification tasks.
     """
+
+    def __init__(
+        self,
+        train_transform: Optional[Dict[str, Callable]] = None,
+        val_transform: Optional[Dict[str, Callable]] = None,
+        test_transform: Optional[Dict[str, Callable]] = None,
+        predict_transform: Optional[Dict[str, Callable]] = None,
+        labels: Optional[Sequence[str]] = None,
+    ):
+        super().__init__(
+            train_transform=train_transform,
+            val_transform=val_transform,
+            test_transform=test_transform,
+            predict_transform=predict_transform,
+            data_sources={DefaultDataSources.FOLDERS: ImageClassificationPathsDataSource(labels=labels)},
+            default_data_source=DefaultDataSources.FOLDERS
+        )
 
     def get_state_dict(self) -> Dict[str, Any]:
         return self.transforms
