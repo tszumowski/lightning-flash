@@ -12,11 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from numbers import Number
-from pathlib import Path
 from typing import Any, Tuple
-from unittest import mock
 
-import numpy as np
 import pytest
 import pytorch_lightning as pl
 import torch
@@ -29,8 +26,7 @@ import flash
 from flash.core.classification import ClassificationTask
 from flash.core.data.process import DefaultPreprocess, Postprocess
 from flash.core.utilities.imports import _PIL_AVAILABLE, _TABULAR_AVAILABLE, _TEXT_AVAILABLE
-from flash.image import ImageClassificationData, ImageClassifier
-from tests.helpers.utils import _IMAGE_TESTING, _TABULAR_TESTING
+from tests.helpers.utils import _TABULAR_TESTING
 
 if _TABULAR_AVAILABLE:
     from flash.tabular import TabularClassifier
@@ -99,25 +95,6 @@ def test_classificationtask_task_predict():
     assert pred0[0] == pred1[0]
 
 
-@mock.patch("flash._IS_TESTING", True)
-@pytest.mark.skipif(not _IMAGE_TESTING, reason="image libraries aren't installed.")
-def test_classification_task_predict_folder_path(tmpdir):
-    train_dir = Path(tmpdir / "train")
-    train_dir.mkdir()
-
-    def _rand_image():
-        return Image.fromarray(np.random.randint(0, 255, (256, 256, 3), dtype="uint8"))
-
-    _rand_image().save(train_dir / "1.png")
-    _rand_image().save(train_dir / "2.png")
-
-    datamodule = ImageClassificationData.from_folders(predict_folder=train_dir)
-
-    task = ImageClassifier(num_classes=10)
-    predictions = task.predict(str(train_dir), data_pipeline=datamodule.data_pipeline)
-    assert len(predictions) == 2
-
-
 def test_classification_task_trainer_predict(tmpdir):
     model = nn.Sequential(nn.Flatten(), nn.Linear(28 * 28, 10))
     task = ClassificationTask(model)
@@ -160,14 +137,6 @@ def test_task_datapipeline_save(tmpdir):
 
 @pytest.mark.parametrize(["cls", "filename"], [
     pytest.param(
-        ImageClassifier,
-        "image_classification_model.pt",
-        marks=pytest.mark.skipif(
-            not _IMAGE_TESTING,
-            reason="image packages aren't installed",
-        )
-    ),
-    pytest.param(
         TabularClassifier,
         "tabular_classification_model.pt",
         marks=pytest.mark.skipif(
@@ -181,17 +150,6 @@ def test_model_download(tmpdir, cls, filename):
     with tmpdir.as_cwd():
         task = cls.load_from_checkpoint(url + filename)
         assert isinstance(task, cls)
-
-
-@pytest.mark.skipif(not _IMAGE_TESTING, reason="image libraries aren't installed.")
-def test_available_backbones():
-    backbones = ImageClassifier.available_backbones()
-    assert "resnet152" in backbones
-
-    class Foo(ImageClassifier):
-        backbones = None
-
-    assert Foo.available_backbones() == []
 
 
 def test_optimization(tmpdir):

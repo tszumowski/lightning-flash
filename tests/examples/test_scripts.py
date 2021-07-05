@@ -28,16 +28,6 @@ root = Path(__file__).parent.parent.parent
 @pytest.mark.parametrize(
     "folder, file",
     [
-        pytest.param(
-            "finetuning",
-            "image_classification.py",
-            marks=pytest.mark.skipif(not _IMAGE_TESTING, reason="image libraries aren't installed")
-        ),
-        pytest.param(
-            "finetuning",
-            "image_classification_multi_label.py",
-            marks=pytest.mark.skipif(not _IMAGE_TESTING, reason="image libraries aren't installed")
-        ),
         # pytest.param("finetuning", "object_detection.py"),  # TODO: takes too long.
         pytest.param(
             "finetuning",
@@ -73,16 +63,6 @@ root = Path(__file__).parent.parent.parent
         ),
         pytest.param(
             "predict",
-            "image_classification.py",
-            marks=pytest.mark.skipif(not _IMAGE_TESTING, reason="image libraries aren't installed")
-        ),
-        pytest.param(
-            "predict",
-            "image_classification_multi_label.py",
-            marks=pytest.mark.skipif(not _IMAGE_TESTING, reason="image libraries aren't installed")
-        ),
-        pytest.param(
-            "predict",
             "semantic_segmentation.py",
             marks=pytest.mark.skipif(not _IMAGE_TESTING, reason="image libraries aren't installed")
         ),
@@ -92,11 +72,6 @@ root = Path(__file__).parent.parent.parent
             marks=pytest.mark.skipif(not _TABULAR_TESTING, reason="tabular libraries aren't installed")
         ),
         # pytest.param("predict", "text_classification.py"),
-        pytest.param(
-            "predict",
-            "image_embedder.py",
-            marks=pytest.mark.skipif(not _IMAGE_TESTING, reason="image libraries aren't installed")
-        ),
         pytest.param(
             "predict",
             "video_classification.py",

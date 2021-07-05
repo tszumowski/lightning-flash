@@ -17,11 +17,11 @@ from typing import Any, Callable, Dict, Optional, Sequence, Union
 
 from torch import nn
 
+from flash.core.data.data_module import DataModule
 from flash.core.data.data_source import DefaultDataKeys, DefaultDataSources
 from flash.core.data.process import Preprocess
 from flash.core.data.transforms import ApplyToKeys
 from flash.core.utilities.imports import _TORCHVISION_AVAILABLE
-from flash.image.classification import ImageClassificationData
 from flash.image.data import ImageNumpyDataSource, ImagePathsDataSource, ImageTensorDataSource
 from flash.image.style_transfer.utils import raise_not_supported
 
@@ -75,7 +75,6 @@ class StyleTransferPreprocess(Preprocess):
                 DefaultDataSources.FOLDERS: ImagePathsDataSource(),
                 DefaultDataSources.NUMPY: ImageNumpyDataSource(),
                 DefaultDataSources.TENSORS: ImageTensorDataSource(),
-                DefaultDataSources.TENSORS: ImageTensorDataSource(),
             },
             default_data_source=DefaultDataSources.FILES,
         )
@@ -106,7 +105,7 @@ class StyleTransferPreprocess(Preprocess):
         return None
 
 
-class StyleTransferData(ImageClassificationData):
+class StyleTransferData(DataModule):
     preprocess_cls = StyleTransferPreprocess
 
     @classmethod
