@@ -11,10 +11,29 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Sequence
 
 from flash.core.data.data_module import DataModule
+from flash.core.data.data_source import DefaultDataKeys, PathsDataSource
 from flash.core.data.process import Preprocess
+from flash.core.utilities.imports import _TORCHVISION_AVAILABLE
+
+if _TORCHVISION_AVAILABLE:
+    from torchvision.datasets.folder import default_loader, IMG_EXTENSIONS
+
+
+class ImageClassificationPathsDataSource(PathsDataSource):
+    """The ``ImageClassificationPathsDataSource`` is a :class:`~flash.core.data.data_source.PathsDataSource` which loads
+    PIL images from files using ``torchvision``.
+    """
+
+    def __init__(self, labels: Optional[Sequence[str]] = None):
+        super().__init__(extensions=IMG_EXTENSIONS, labels=labels)
+
+    def load_sample(self, sample: Dict[str, Any]) -> Dict[str, Any]:
+        sample[DefaultDataKeys.INPUT] =\
+            default_loader(sample[DefaultDataKeys.INPUT])
+        return sample
 
 
 class ImageClassificationPreprocess(Preprocess):
