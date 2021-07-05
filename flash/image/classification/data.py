@@ -11,12 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Callable, Dict, Optional, Sequence
+from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 
 from flash.core.data.data_module import DataModule
 from flash.core.data.data_source import DefaultDataKeys, DefaultDataSources, PathsDataSource
 from flash.core.data.process import Preprocess
 from flash.core.utilities.imports import _TORCHVISION_AVAILABLE
+from flash.image.classification.transforms import default_transforms
 
 if _TORCHVISION_AVAILABLE:
     from torchvision.datasets.folder import default_loader, IMG_EXTENSIONS
@@ -48,6 +49,7 @@ class ImageClassificationPreprocess(Preprocess):
         test_transform: Optional[Dict[str, Callable]] = None,
         predict_transform: Optional[Dict[str, Callable]] = None,
         labels: Optional[Sequence[str]] = None,
+        image_size: Tuple[int, int] = (64, 64),
     ):
         super().__init__(
             train_transform=train_transform,
@@ -57,6 +59,11 @@ class ImageClassificationPreprocess(Preprocess):
             data_sources={DefaultDataSources.FOLDERS: ImageClassificationPathsDataSource(labels=labels)},
             default_data_source=DefaultDataSources.FOLDERS
         )
+
+        self.image_size = image_size
+
+    def default_transforms(self) -> Optional[Dict[str, Callable]]:
+        return default_transforms(self.image_size)
 
     def get_state_dict(self) -> Dict[str, Any]:
         return self.transforms
