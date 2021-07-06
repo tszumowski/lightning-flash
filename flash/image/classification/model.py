@@ -14,19 +14,25 @@
 from typing import Any, Callable, Dict, Mapping, Optional, Sequence, Type, Union
 
 import torch
+from torch import nn
 from torchmetrics import Metric
 
 from flash.core.classification import ClassificationTask, Labels
 from flash.core.data.data_source import DefaultDataKeys
 from flash.core.data.process import Serializer
+from flash.core.registry import FlashRegistry
+from flash.image.classification.backbones import IMAGE_CLASSIFIER_BACKBONES
 
 
 class ImageClassifier(ClassificationTask):
+
+    backbones: FlashRegistry = IMAGE_CLASSIFIER_BACKBONES
 
     def __init__(
         self,
         num_classes: int,
         backbone: str = "resnet18",
+        pretrained: bool = True,
         loss_fn: Optional[Callable] = None,
         optimizer: Type[torch.optim.Optimizer] = torch.optim.Adam,
         optimizer_kwargs: Optional[Dict[str, Any]] = None,
@@ -43,6 +49,15 @@ class ImageClassifier(ClassificationTask):
             learning_rate=learning_rate,
             serializer=serializer or Labels(),
         )
+
+        self.backbone, num_features = self.backbones.get(backbone)(pretrained=pretrained)
+        self.head = nn.Linear(num_features, num_classes)
+
+    def forward(self, x: Any) -> Any:
+        x = self.backbone(x)
+        if x.dim() == 4:
+            x = x.mean(-1).mean(-1)
+        return self.head(x)
 
     def training_step(self, batch: Any, batch_idx: int) -> Any:
         batch = (

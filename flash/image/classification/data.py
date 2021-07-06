@@ -51,6 +51,8 @@ class ImageClassificationPreprocess(Preprocess):
         labels: Optional[Sequence[str]] = None,
         image_size: Tuple[int, int] = (64, 64),
     ):
+        self.image_size = image_size
+
         super().__init__(
             train_transform=train_transform,
             val_transform=val_transform,
@@ -59,8 +61,6 @@ class ImageClassificationPreprocess(Preprocess):
             data_sources={DefaultDataSources.FOLDERS: ImageClassificationPathsDataSource(labels=labels)},
             default_data_source=DefaultDataSources.FOLDERS
         )
-
-        self.image_size = image_size
 
     def default_transforms(self) -> Optional[Dict[str, Callable]]:
         return default_transforms(self.image_size)
