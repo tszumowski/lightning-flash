@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from os import listdir
 from os.path import basename, dirname, exists, isdir, isfile, join
-from posix import listdir
 from typing import Any, Dict, List, Optional, Union
 
 import yaml
