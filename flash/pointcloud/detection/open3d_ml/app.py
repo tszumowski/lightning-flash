@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from abc import ABC
-
 import numpy as np
 import torch
 from torch.utils.data.dataset import Dataset
@@ -28,7 +26,7 @@ if _POINTCLOUD_AVAILABLE:
     from open3d._ml3d.vis.visualizer import Visualizer as Open3dVisualizer
     from open3d.visualization import gui
 else:
-    Open3dVisualizer = ABC
+    Open3dVisualizer = object
 
 
 class Visualizer(Open3dVisualizer):
