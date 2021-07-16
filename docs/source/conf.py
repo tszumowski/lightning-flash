@@ -156,7 +156,7 @@ PACKAGE_MAPPING = {
     'pytorch-lightning': 'pytorch_lightning',
     'scikit-learn': 'sklearn',
     'Pillow': 'PIL',
-    'PyYAML': 'yaml',
+    'PyYAML>=5.1': 'yaml',
     'rouge-score': 'rouge_score',
     'lightning-bolts': 'pl_bolts',
     'pytorch-tabnet': 'pytorch_tabnet',
