@@ -66,9 +66,9 @@ Here's the structure:
 Learn more: http://www.semantic-kitti.org/dataset.html
 
 
-Once we've downloaded the data using :func:`~flash.core.data.download_data`, we create the :class:`~flash.image.detection.data.PointCloudObjectDetectorData`.
-We select a pre-trained ``randlanet_semantic_kitti`` backbone for our :class:`~flash.image.detection.model.PointCloudObjectDetector` task.
-We then use the trained :class:`~flash.image.detection.model.PointCloudObjectDetector` for inference.
+Once we've downloaded the data using :func:`~flash.core.data.download_data`, we create the :class:`~flash.pointcloud.detection.data.PointCloudObjectDetectorData`.
+We select a pre-trained ``randlanet_semantic_kitti`` backbone for our :class:`~flash.pointcloud.detection.model.PointCloudObjectDetector` task.
+We then use the trained :class:`~flash.pointcloud.detection.model.PointCloudObjectDetector` for inference.
 Finally, we save the model.
 Here's the full example:
 
