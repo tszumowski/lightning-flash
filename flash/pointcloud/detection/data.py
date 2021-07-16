@@ -7,18 +7,10 @@ from flash.core.data.data_module import DataModule
 from flash.core.data.data_pipeline import Deserializer
 from flash.core.data.data_source import BaseDataFormat, DataSource, DefaultDataKeys, DefaultDataSources
 from flash.core.data.process import Preprocess
-from flash.core.utilities.imports import _POINTCLOUD_AVAILABLE
-
-if _POINTCLOUD_AVAILABLE:
-    from flash.pointcloud.detection.open3d_ml.data_sources import (
-        PointCloudObjectDetectionDataFormat,
-        PointCloudObjectDetectorFoldersDataSource,
-    )
-else:
-    PointCloudObjectDetectorFoldersDataSource = object()
-
-    class PointCloudObjectDetectionDataFormat:
-        KITTI = None
+from flash.pointcloud.detection.open3d_ml.data_sources import (
+    PointCloudObjectDetectionDataFormat,
+    PointCloudObjectDetectorFoldersDataSource,
+)
 
 
 class PointCloudObjectDetectorDatasetDataSource(DataSource):
