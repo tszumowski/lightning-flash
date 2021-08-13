@@ -212,7 +212,7 @@ embedder = ImageEmbedder(backbone="resnet50")
 embeddings = embedder.predict("data/hymenoptera_data/predict/153783656_85f9c3ac70.jpg")
 
 # 4. Print embeddings shape
-print(embeddings.shape)
+print(embeddings[0].shape)
 ```
 
 </details>
